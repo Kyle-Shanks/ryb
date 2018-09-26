@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const width = cnv.width;
       this.pos.x += this.vx;
       this.pos.y += this.vy;
+      this.onGround = false;
 
       // Setting Outer Boundaries
       if( ((this.pos.x) < 0) || (this.pos.x > (width - this.width)) ) { this.vx = 0; }
@@ -145,7 +146,43 @@ document.addEventListener('DOMContentLoaded', () => {
       if(this.vy < -(this.vyMax)) {this.vy = -(this.vyMax)};
     }
 
+    collisionCheck(obj) {
+      if(obj.color !== currentColor && AABB(this, obj)) {
+        this.collisionHandler(obj);
+      }
+    }
+
+    collisionHandler(obj) {
+      // Y Collision
+      if ((this.pos.x < obj.pos.x + obj.width) && (this.pos.x + this.width > obj.pos.x)) {
+        if ((this.pos.y < obj.pos.y) && this.vy > 0) {
+          this.pos.y = obj.pos.y - this.height;
+          this.vy = 0;
+          this.onGround = true;
+          this.doubleJumps = this.maxDoubleJumps;
+        }
+        if ((this.pos.y > obj.pos.y) && this.vy < 0) {
+          this.pos.y = obj.pos.y + obj.height;
+          this.vy = 0;
+        }
+      }
+
+      // X Collision
+      if ((this.pos.y < obj.pos.y + obj.height) && (this.pos.y + this.height > obj.pos.y)) {
+        if ((this.pos.x < obj.pos.x) && this.vx > 0) {
+          this.pos.x = obj.pos.x - this.width;
+          this.vx = 0;
+        }
+        if ((this.pos.x > obj.pos.x) && this.vx < 0) {
+          this.pos.x = obj.pos.x + obj.width;
+          this.vx = 0;
+        }
+      }
+    }
+
     draw() {
+      ctx.fillStyle = 'rgba(0,0,0,0.15)';
+      ctx.fillRect(this.pos.x+10,this.pos.y+10,this.width,this.height);
       ctx.fillStyle = 'rgba(255,255,255,1)';
       ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
     }
@@ -154,9 +191,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const player = new Player();
   // ---------------------------------------------------------
 
+  // --- Object Class ----------------------------------------
+  class Object {
+    constructor(props) {
+      this.pos = props.pos || { x: 0, y: 0 };
+      this.height = props.height || 50;
+      this.width = props.width || 50;
+      this.color = props.color || 3;
+    }
+
+    draw() {
+      if (this.color !== currentColor) {
+        // Shadow
+        ctx.fillStyle = 'rgba(0,0,0,0.15)';
+        ctx.fillRect(this.pos.x+10,this.pos.y+10,this.width,this.height);
+      }
+      ctx.fillStyle = colorArray[this.color];
+      ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+    }
+  }
+
+  const obj1 = new Object({
+    pos: {x: 300, y: 700},
+    height: 50,
+    width: 350,
+    color: 2,
+  });
+  // ---------------------------------------------------------
+
   // --- Stage Data ------------------------------------------
   let currentStage = 0;
-  const colorArray = ['#E91E63','#E9C65F','#00BCD4']; // ryb
+  const colorArray = ['#E91E63','#E9C65F','#00BCD4','#000F23']; // ryb + black
   let currentColor = 0;
   // ---------------------------------------------------------
 
@@ -188,10 +253,21 @@ document.addEventListener('DOMContentLoaded', () => {
   function frameFunction() {
     coverFrame();
 
+    // Draw objects that are the currentColor
+    if (obj1.color === currentColor) obj1.draw();
+
+    // Player stuff
     player.updateMovement();
     player.updatePosition();
+
+    player.collisionCheck(obj1);
+
     player.draw();
 
+    // Draw objects that are not the currentColor
+    if (obj1.color !== currentColor) obj1.draw();
+
+    // Check for input from the user (e.g. pause, color switch, etc.)
     checkInput();
 
     // Next Frame
@@ -202,6 +278,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // ctx.fillStyle = 'rgba(0,15,35,1)'; // change opacity for fade
     ctx.fillStyle = colorArray[currentColor];
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
+
+  // AABB-collision check function
+  function AABB(r1,r2) {
+    return (r1.pos.x < r2.pos.x + r2.width && r1.pos.x + r1.width > r2.pos.x &&
+            r1.pos.y < r2.pos.y + r2.height && r1.pos.y + r1.height > r2.pos.y);
   }
   // ---------------------------------------------------------
 
