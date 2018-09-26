@@ -129,19 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // Gravity
       this.vy += this.gravity;
 
-      // Jumping
-      if (this.onGround && input.SPACE) {
-        this.onGround = false;
-        this.vy = -(this.vyMax);
-        input.SPACE = false;
-      }
-      // Double Jumping
-      if (!this.onGround && input.SPACE && this.doubleJumps) {
-        this.vy = -(this.vyMax) * this.doubleJumpMod;
-        input.SPACE = false;
-        this.doubleJumps--;
-      }
-
       if(this.vy > this.vyMax) {this.vy = this.vyMax};
       if(this.vy < -(this.vyMax)) {this.vy = -(this.vyMax)};
     }
@@ -154,28 +141,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     collisionHandler(obj) {
       // Y Collision
-      if ((this.pos.x < obj.pos.x + obj.width) && (this.pos.x + this.width > obj.pos.x)) {
-        if ((this.pos.y < obj.pos.y) && this.vy > 0) {
-          this.pos.y = obj.pos.y - this.height;
-          this.vy = 0;
-          this.onGround = true;
-          this.doubleJumps = this.maxDoubleJumps;
-        }
-        if ((this.pos.y > obj.pos.y) && this.vy < 0) {
-          this.pos.y = obj.pos.y + obj.height;
-          this.vy = 0;
-        }
+      if ((this.pos.y + this.height < obj.pos.y + this.vyMax + 1) && this.vy >= 0) {
+        this.pos.y = obj.pos.y - this.height;
+        this.vy = 0;
+        this.onGround = true;
+        this.doubleJumps = this.maxDoubleJumps;
+      } else if ((this.pos.y > obj.pos.y + obj.height - this.vyMax - 1) && this.vy <= 0) {
+        this.pos.y = obj.pos.y + obj.height;
+        this.vy = 0;
       }
 
       // X Collision
-      if ((this.pos.y < obj.pos.y + obj.height) && (this.pos.y + this.height > obj.pos.y)) {
-        if ((this.pos.x < obj.pos.x) && this.vx > 0) {
-          this.pos.x = obj.pos.x - this.width;
-          this.vx = 0;
+      if ((this.pos.x + this.width < obj.pos.x + this.vxMax + 1) && this.vx >= 0) {
+        this.pos.x = obj.pos.x - this.width;
+        this.vx = 0;
+        if (input.SPACE) {
+          this.vy = this.vyMax * -1;
+          this.vx = this.vxMax * -1;
+          input.SPACE = false;
         }
-        if ((this.pos.x > obj.pos.x) && this.vx < 0) {
-          this.pos.x = obj.pos.x + obj.width;
-          this.vx = 0;
+      } else if ((this.pos.x > obj.pos.x + obj.width - this.vxMax - 1) && this.vx <= 0) {
+        this.pos.x = obj.pos.x + obj.width;
+        this.vx = 0;
+        if (input.SPACE) {
+          this.vy = this.vyMax * -1;
+          this.vx = this.vxMax * 1;
+          input.SPACE = false;
         }
       }
     }
@@ -214,8 +205,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const obj1 = new Object({
     pos: {x: 300, y: 700},
     height: 50,
-    width: 350,
+    width: 400,
     color: 2,
+  });
+  const obj2 = new Object({
+    pos: {x: 800, y: 400},
+    height: 600,
+    width: 50,
+    color: 1,
   });
   // ---------------------------------------------------------
 
@@ -227,6 +224,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Player Input ----------------------------------------
   function checkInput() {
+    // Jumping
+    if (player.onGround && input.SPACE) {
+      player.onGround = false;
+      player.vy = -(player.vyMax);
+      input.SPACE = false;
+    }
+    // Double Jumping
+    if (!player.onGround && input.SPACE && player.doubleJumps) {
+      player.vy = -(player.vyMax) * player.doubleJumpMod;
+      input.SPACE = false;
+      player.doubleJumps--;
+    }
+
+    // Color Switching
     if (input.LEFT) {
       input.LEFT = false;
       currentColor = 0;
@@ -255,17 +266,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Draw objects that are the currentColor
     if (obj1.color === currentColor) obj1.draw();
+    if (obj2.color === currentColor) obj2.draw();
 
     // Player stuff
     player.updateMovement();
     player.updatePosition();
 
     player.collisionCheck(obj1);
+    player.collisionCheck(obj2);
 
     player.draw();
 
     // Draw objects that are not the currentColor
     if (obj1.color !== currentColor) obj1.draw();
+    if (obj2.color !== currentColor) obj2.draw();
 
     // Check for input from the user (e.g. pause, color switch, etc.)
     checkInput();
@@ -275,12 +289,11 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   function coverFrame() {
-    // ctx.fillStyle = 'rgba(0,15,35,1)'; // change opacity for fade
     ctx.fillStyle = colorArray[currentColor];
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
 
-  // AABB-collision check function
+  // AABB-collision check
   function AABB(r1,r2) {
     return (r1.pos.x < r2.pos.x + r2.width && r1.pos.x + r1.width > r2.pos.x &&
             r1.pos.y < r2.pos.y + r2.height && r1.pos.y + r1.height > r2.pos.y);
