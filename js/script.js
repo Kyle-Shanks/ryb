@@ -2,14 +2,11 @@
 // ryb
 
 document.addEventListener('DOMContentLoaded', () => {
-  // --- Setup -----------------------------------------------
   // - Canvas Context -
   const cnv = document.getElementById('cnv');
   const ctx = cnv.getContext('2d');
   const container = document.getElementsByClassName('canvas-container')[0];
-  // ---------------------------------------------------------
 
-  // --- Input Handling --------------------------------------
   // - Keyboard Inputs -
   const input = {
     W: false,
@@ -69,9 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
       default: return false;
     }
   });
-  // ---------------------------------------------------------
 
-  // --- Player Class ----------------------------------------
+  // - Player Class -
   class Player {
     constructor() {
       // Size and position
@@ -118,9 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // X Movement
       this.vx += (input.D ? this.vxAcc : -(this.vxAcc)) + (input.A ? (-(this.vxAcc)) : this.vxAcc);
       if((!input.D && !input.A) || (input.D && input.A)) {
-        if(this.vx < this.vxAcc && this.vx > -(this.vxAcc)) {this.vx = 0};
-        if(this.vx < 0) {this.vx += this.vxAcc/1.8};
-        if(this.vx > 0) {this.vx -= this.vxAcc/1.8};
+        if(this.vx < this.vxAcc && this.vx > -(this.vxAcc)) { this.vx = 0 };
+        if(this.vx < 0) { this.vx += this.vxAcc/1.8 };
+        if(this.vx > 0) { this.vx -= this.vxAcc/1.8 };
       };
       if(this.vx > this.vxMax) {this.vx = this.vxMax};
       if(this.vx < -(this.vxMax)) {this.vx = -(this.vxMax)};
@@ -135,39 +131,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     collisionCheck(obj) {
       if(obj.color !== currentColor && AABB(this, obj)) {
-        this.collisionHandler(obj);
+        switch(obj.type) {
+          case 'solid': this.collisionHandler(obj); break;
+          case 'port': currentStage = obj.stageNum; break;
+        }
       }
     }
 
     collisionHandler(obj) {
+      let yChange = false;
       // Y Collision
       if ((this.pos.y + this.height < obj.pos.y + this.vyMax + 1) && this.vy >= 0) {
         this.pos.y = obj.pos.y - this.height;
         this.vy = 0;
         this.onGround = true;
         this.doubleJumps = this.maxDoubleJumps;
+        yChange = true;
       } else if ((this.pos.y > obj.pos.y + obj.height - this.vyMax - 1) && this.vy <= 0) {
         this.pos.y = obj.pos.y + obj.height;
         this.vy = 0;
       }
 
       // X Collision
-      if ((this.pos.x + this.width < obj.pos.x + this.vxMax + 1) && this.vx >= 0) {
+      if ((this.pos.x + this.width < obj.pos.x + this.vxMax + 1) && this.vx >= 0 && !yChange) {
         this.pos.x = obj.pos.x - this.width;
         this.vx = 0;
-        if (input.SPACE) {
-          this.vy = this.vyMax * -1;
-          this.vx = this.vxMax * -1;
-          input.SPACE = false;
-        }
-      } else if ((this.pos.x > obj.pos.x + obj.width - this.vxMax - 1) && this.vx <= 0) {
+      } else if ((this.pos.x > obj.pos.x + obj.width - this.vxMax - 1) && this.vx <= 0 && !yChange) {
         this.pos.x = obj.pos.x + obj.width;
         this.vx = 0;
-        if (input.SPACE) {
-          this.vy = this.vyMax * -1;
-          this.vx = this.vxMax * 1;
-          input.SPACE = false;
-        }
       }
     }
 
@@ -176,19 +167,21 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fillRect(this.pos.x+10,this.pos.y+10,this.width,this.height);
       ctx.fillStyle = 'rgba(255,255,255,1)';
       ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+      ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+      ctx.strokeRect(this.pos.x, this.pos.y, this.width, this.height);
     }
   }
 
   const player = new Player();
-  // ---------------------------------------------------------
 
-  // --- Object Class ----------------------------------------
+  // - Object Class -
   class Object {
     constructor(props) {
       this.pos = props.pos || { x: 0, y: 0 };
       this.height = props.height || 50;
       this.width = props.width || 50;
-      this.color = props.color || 3;
+      this.color = props.color !== undefined ? props.color : 3;
+      this.type = props.type || 'solid';
     }
 
     draw() {
@@ -199,30 +192,42 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       ctx.fillStyle = colorArray[this.color];
       ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+      ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+      ctx.strokeRect(this.pos.x, this.pos.y, this.width, this.height);
     }
   }
 
-  const obj1 = new Object({
-    pos: {x: 300, y: 700},
-    height: 50,
-    width: 400,
-    color: 2,
-  });
-  const obj2 = new Object({
-    pos: {x: 800, y: 400},
-    height: 600,
-    width: 50,
-    color: 1,
-  });
-  // ---------------------------------------------------------
+  // - Stage Data -
+  const stages = [
+    {
+      title: 'Intro Stage',
+      startingColor: 0,
+      startingPosition: { x: 360, y: 500 },
+      objects: [
+        {
+          pos: { x: 300, y: 700 },
+          height: 50,
+          width: 400,
+          color: 2,
+          type: 'solid'
+        },
+        {
+          pos: { x: 800, y: 400 },
+          height: 600,
+          width: 50,
+          color: 1,
+          type: 'solid'
+        },
+      ],
+    }
+  ];
 
-  // --- Stage Data ------------------------------------------
-  let currentStage = 0;
   const colorArray = ['#E91E63','#E9C65F','#00BCD4','#000F23']; // ryb + black
   let currentColor = 0;
-  // ---------------------------------------------------------
+  let currentStage = 0;
+  let objArray = [];
 
-  // --- Player Input ----------------------------------------
+  // - Player Input -
   function checkInput() {
     // Jumping
     if (player.onGround && input.SPACE) {
@@ -230,11 +235,27 @@ document.addEventListener('DOMContentLoaded', () => {
       player.vy = -(player.vyMax);
       input.SPACE = false;
     }
-    // Double Jumping
-    if (!player.onGround && input.SPACE && player.doubleJumps) {
-      player.vy = -(player.vyMax) * player.doubleJumpMod;
+
+    // Wall Jumping / Double Jumping
+    if (!player.onGround && input.SPACE) {
+      const filteredObjects = stages[currentStage].objects.filter(obj => {
+        return (
+          obj.color !== currentColor &&
+          !(player.pos.y >= obj.pos.y + obj.height || player.pos.y + player.height <= obj.pos.y)
+        );
+      });
+
+      if (filteredObjects.some(obj => obj.pos.x + obj.width === player.pos.x)) {
+        player.vy = player.vyMax * -1;
+        player.vx = player.vxMax * 1;
+      } else if (filteredObjects.some(obj => obj.pos.x === player.pos.x + player.width)) {
+        player.vy = player.vyMax * -1;
+        player.vx = player.vxMax * -1;
+      } else if (player.doubleJumps) {
+        player.vy = -(player.vyMax) * player.doubleJumpMod;
+        player.doubleJumps--;
+      }
       input.SPACE = false;
-      player.doubleJumps--;
     }
 
     // Color Switching
@@ -250,36 +271,39 @@ document.addEventListener('DOMContentLoaded', () => {
       currentColor = 2;
     }
   }
-  // ---------------------------------------------------------
 
-  // --- Functions -------------------------------------------
+  // - Functions -
   function init() {
     reset();
     frameFunction();
   };
   function reset() {
     // Reset/Initialize stuff
+    player.pos = stages[currentStage].startingPosition;
+    objArray = stages[currentStage].objects.map(props => new Object(props));
   };
 
   function frameFunction() {
     coverFrame();
 
+    ctx.fillStyle = "rgba(0,0,0,0.5)";
+    ctx.font="54px Comfortaa";
+    ctx.fillText(stages[currentStage].title,40,80);
+
     // Draw objects that are the currentColor
-    if (obj1.color === currentColor) obj1.draw();
-    if (obj2.color === currentColor) obj2.draw();
+    objArray.filter(obj => obj.color === currentColor).forEach(obj => obj.draw());
 
     // Player stuff
     player.updateMovement();
     player.updatePosition();
 
-    player.collisionCheck(obj1);
-    player.collisionCheck(obj2);
+    const shownObjects = objArray.filter(obj => obj.color !== currentColor);
+    shownObjects.forEach(obj => player.collisionCheck(obj));
 
     player.draw();
 
     // Draw objects that are not the currentColor
-    if (obj1.color !== currentColor) obj1.draw();
-    if (obj2.color !== currentColor) obj2.draw();
+    shownObjects.forEach(obj => obj.draw());
 
     // Check for input from the user (e.g. pause, color switch, etc.)
     checkInput();
@@ -298,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return (r1.pos.x < r2.pos.x + r2.width && r1.pos.x + r1.width > r2.pos.x &&
             r1.pos.y < r2.pos.y + r2.height && r1.pos.y + r1.height > r2.pos.y);
   }
-  // ---------------------------------------------------------
 
+  // - Go Time -
   init();
 });
