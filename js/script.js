@@ -97,14 +97,14 @@ document.addEventListener('DOMContentLoaded', () => {
       this.onGround = false;
 
       // Setting Outer Boundaries
-      if( ((this.pos.x) < 0) || (this.pos.x > (width - this.width)) ) { this.vx = 0; }
-      else if( ((this.pos.y) < 0) || (this.pos.y > (height - this.height)) ) { this.vy = 0; }
+      if( ((this.pos.x) < 0) || (this.pos.x > (stages[currentStage].width - this.width)) ) { this.vx = 0; }
+      else if( ((this.pos.y) < 0) || (this.pos.y > (stages[currentStage].height - this.height)) ) { this.vy = 0; }
 
       if(this.pos.x < 0) { this.pos.x = 0; }
-      else if((this.pos.x + this.width) > width) { this.pos.x = width - this.width; }
+      else if((this.pos.x + this.width) > stages[currentStage].width) { this.pos.x = stages[currentStage].width - this.width; }
       if(this.pos.y < 0) { this.pos.y = 0; }
-      else if((this.pos.y + this.height) > height) {
-        this.pos.y = height - this.height;
+      else if((this.pos.y + this.height) > stages[currentStage].height) {
+        this.pos.y = stages[currentStage].height - this.height;
         this.onGround = true;
         this.doubleJumps = this.maxDoubleJumps;
       }
@@ -164,11 +164,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     draw() {
       ctx.fillStyle = 'rgba(0,0,0,0.15)';
-      ctx.fillRect(this.pos.x+10,this.pos.y+10,this.width,this.height);
+      ctx.fillRect(this.pos.x - camera.pos.x + 10,this.pos.y + 10,this.width,this.height);
       ctx.fillStyle = 'rgba(255,255,255,1)';
-      ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+      ctx.fillRect(this.pos.x - camera.pos.x, this.pos.y, this.width, this.height);
       ctx.strokeStyle = 'rgba(0,0,0,0.5)';
-      ctx.strokeRect(this.pos.x, this.pos.y, this.width, this.height);
+      ctx.strokeRect(this.pos.x - camera.pos.x, this.pos.y, this.width, this.height);
     }
   }
 
@@ -188,12 +188,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (this.color !== currentColor) {
         // Shadow
         ctx.fillStyle = 'rgba(0,0,0,0.15)';
-        ctx.fillRect(this.pos.x+10,this.pos.y+10,this.width,this.height);
+        ctx.fillRect(this.pos.x - camera.pos.x + 10,this.pos.y + 10,this.width,this.height);
       }
       ctx.fillStyle = colorArray[this.color];
-      ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
+      ctx.fillRect(this.pos.x - camera.pos.x, this.pos.y, this.width, this.height);
       ctx.strokeStyle = 'rgba(0,0,0,0.2)';
-      ctx.strokeRect(this.pos.x, this.pos.y, this.width, this.height);
+      ctx.strokeRect(this.pos.x - camera.pos.x, this.pos.y, this.width, this.height);
     }
   }
 
@@ -201,8 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const stages = [
     {
       title: 'Intro Stage',
-      startingColor: 0,
+      height: 1000,
+      width: 2800,
       startingPosition: { x: 360, y: 500 },
+      startingColor: 0,
       objects: [
         {
           pos: { x: 300, y: 700 },
@@ -226,6 +228,32 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentColor = 0;
   let currentStage = 0;
   let objArray = [];
+
+  // - Camera -
+  const camera = {
+    pos: { x: 0, y: 0 },
+    vxMax: 25,
+    vyMax: 40,
+    // Screen padding for camera movement
+    xPad: 650,
+    yPad: 500,
+    updatePosition: function() {
+      // Moving Right
+      if((player.pos.x - this.pos.x) > (cnv.width - this.xPad)) {
+        this.pos.x += Math.floor((((player.pos.x - this.pos.x) - (cnv.width - this.xPad))/this.xPad)*this.vxMax);
+      }
+      // Moving Left
+      if((player.pos.x - this.pos.x) < (this.xPad)) {
+        this.pos.x -= Math.floor(((this.xPad-(player.pos.x - this.pos.x))/this.xPad)*this.vxMax);
+      }
+
+      // Setting maxes based on stage size
+      if(this.pos.x < 0) { this.pos.x = 0; }
+      if(this.pos.y < 0) { this.pos.y = 0; }
+      if(this.pos.x > stages[currentStage].width - 1400) { this.pos.x = stages[currentStage].width - 1400; }
+      if(this.pos.y > stages[currentStage].height - 1000) { this.pos.y = stages[currentStage].height - 1000; }
+    }
+};
 
   // - Player Input -
   function checkInput() {
@@ -297,9 +325,14 @@ document.addEventListener('DOMContentLoaded', () => {
     player.updateMovement();
     player.updatePosition();
 
+    // Collisions
     const shownObjects = objArray.filter(obj => obj.color !== currentColor);
     shownObjects.forEach(obj => player.collisionCheck(obj));
 
+    // Camera movement
+    camera.updatePosition();
+
+    // Drawing
     player.draw();
 
     // Draw objects that are not the currentColor
