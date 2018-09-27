@@ -104,9 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
       else if((this.pos.x + this.width) > stages[currentStage].width) { this.pos.x = stages[currentStage].width - this.width; }
       if(this.pos.y < 0) { this.pos.y = 0; }
       else if((this.pos.y + this.height) > stages[currentStage].height) {
-        this.pos.y = stages[currentStage].height - this.height;
-        this.onGround = true;
-        this.doubleJumps = this.maxDoubleJumps;
+        reset();
       }
     }
 
@@ -133,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if(obj.color !== currentColor && AABB(this, obj)) {
         switch(obj.type) {
           case 'solid': this.collisionHandler(obj); break;
-          case 'port': currentStage = obj.stageNum; break;
+          case 'port': currentStage = obj.stageNum; reset(); break;
         }
       }
     }
@@ -164,11 +162,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     draw() {
       ctx.fillStyle = 'rgba(0,0,0,0.15)';
-      ctx.fillRect(this.pos.x - camera.pos.x + 10,this.pos.y + 10,this.width,this.height);
+      ctx.fillRect(this.pos.x - camera.pos.x + 10,this.pos.y - camera.pos.y + 10,this.width,this.height);
       ctx.fillStyle = 'rgba(255,255,255,1)';
-      ctx.fillRect(this.pos.x - camera.pos.x, this.pos.y, this.width, this.height);
+      ctx.fillRect(this.pos.x - camera.pos.x, this.pos.y - camera.pos.y, this.width, this.height);
       ctx.strokeStyle = 'rgba(0,0,0,0.5)';
-      ctx.strokeRect(this.pos.x - camera.pos.x, this.pos.y, this.width, this.height);
+      ctx.lineWidth = 2;
+      ctx.strokeRect(this.pos.x - camera.pos.x, this.pos.y - camera.pos.y, this.width, this.height);
     }
   }
 
@@ -182,49 +181,32 @@ document.addEventListener('DOMContentLoaded', () => {
       this.width = props.width || 50;
       this.color = props.color !== undefined ? props.color : 3;
       this.type = props.type || 'solid';
+      this.stageNum = props.stageNum;
     }
 
     draw() {
       if (this.color !== currentColor) {
         // Shadow
         ctx.fillStyle = 'rgba(0,0,0,0.15)';
-        ctx.fillRect(this.pos.x - camera.pos.x + 10,this.pos.y + 10,this.width,this.height);
+        ctx.fillRect(this.pos.x - camera.pos.x + 10,this.pos.y - camera.pos.y + 10,this.width,this.height);
       }
+      if (this.type === 'port') {
+        ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(this.pos.x - camera.pos.x - 20, this.pos.y - camera.pos.y - 20, this.width + 40, this.height + 40);
+      } else {
+        ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(this.pos.x - camera.pos.x, this.pos.y - camera.pos.y, this.width, this.height);
+      }
+
       ctx.fillStyle = colorArray[this.color];
-      ctx.fillRect(this.pos.x - camera.pos.x, this.pos.y, this.width, this.height);
-      ctx.strokeStyle = 'rgba(0,0,0,0.2)';
-      ctx.strokeRect(this.pos.x - camera.pos.x, this.pos.y, this.width, this.height);
+      ctx.fillRect(this.pos.x - camera.pos.x, this.pos.y - camera.pos.y, this.width, this.height);
     }
   }
 
-  // - Stage Data -
-  const stages = [
-    {
-      title: 'Intro Stage',
-      height: 1000,
-      width: 2800,
-      startingPosition: { x: 360, y: 500 },
-      startingColor: 0,
-      objects: [
-        {
-          pos: { x: 300, y: 700 },
-          height: 50,
-          width: 400,
-          color: 2,
-          type: 'solid'
-        },
-        {
-          pos: { x: 800, y: 400 },
-          height: 600,
-          width: 50,
-          color: 1,
-          type: 'solid'
-        },
-      ],
-    }
-  ];
-
-  const colorArray = ['#E91E63','#E9C65F','#00BCD4','#000F23']; // ryb + black
+  // - Game Info -
+  const colorArray = ['#E91E63','#E9C65F','#00BCD4','#000F23','#FFFFFF']; // ryb + black + white
   let currentColor = 0;
   let currentStage = 0;
   let objArray = [];
@@ -247,11 +229,20 @@ document.addEventListener('DOMContentLoaded', () => {
         this.pos.x -= Math.floor(((this.xPad-(player.pos.x - this.pos.x))/this.xPad)*this.vxMax);
       }
 
+      // Moving Up
+      if((player.pos.y - this.pos.y) < (this.yPad)) {
+        this.pos.y -= Math.floor(((this.yPad-(player.pos.y - this.pos.y))/this.yPad)*this.vyMax);
+      }
+      // Moving Down
+      if((player.pos.y - this.pos.y) > (cnv.width - this.yPad)) {
+        this.pos.y += Math.floor((((player.pos.y - this.pos.y) - (cnv.height - this.yPad))/this.yPad)*this.vyMax);
+      }
+
       // Setting maxes based on stage size
       if(this.pos.x < 0) { this.pos.x = 0; }
       if(this.pos.y < 0) { this.pos.y = 0; }
-      if(this.pos.x > stages[currentStage].width - 1400) { this.pos.x = stages[currentStage].width - 1400; }
-      if(this.pos.y > stages[currentStage].height - 1000) { this.pos.y = stages[currentStage].height - 1000; }
+      if(this.pos.x > stages[currentStage].width - cnv.width) { this.pos.x = stages[currentStage].width - cnv.width; }
+      if(this.pos.y > stages[currentStage].height - cnv.height) { this.pos.y = stages[currentStage].height - cnv.height; }
     }
 };
 
@@ -298,6 +289,12 @@ document.addEventListener('DOMContentLoaded', () => {
       input.RIGHT = false;
       currentColor = 2;
     }
+
+    // Reset
+    if (input.R) {
+      input.R = false;
+      reset();
+    }
   }
 
   // - Functions -
@@ -306,8 +303,12 @@ document.addEventListener('DOMContentLoaded', () => {
     frameFunction();
   };
   function reset() {
-    // Reset/Initialize stuff
-    player.pos = stages[currentStage].startingPosition;
+    player.pos = dup(stages[currentStage].startingPosition);
+    player.vx = 0;
+    player.vy = 0;
+    camera.pos = { x: 0, y: 0 };
+
+    currentColor = stages[currentStage].startingColor;
     objArray = stages[currentStage].objects.map(props => new Object(props));
   };
 
@@ -354,6 +355,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function AABB(r1,r2) {
     return (r1.pos.x < r2.pos.x + r2.width && r1.pos.x + r1.width > r2.pos.x &&
             r1.pos.y < r2.pos.y + r2.height && r1.pos.y + r1.height > r2.pos.y);
+  }
+
+  // Dup object
+  function dup(obj) {
+    return JSON.parse(JSON.stringify(obj));
   }
 
   // - Go Time -
