@@ -212,20 +212,18 @@ document.addEventListener('DOMContentLoaded', () => {
     constructor(props) {
       this.pos = props.pos || { x: 0, y: 0 };
       this.msg = props.msg || '';
+      this.size = props.size || 30;
     }
 
     draw() {
       ctx.fillStyle = "rgba(255,255,255,0.7)";
-      ctx.font="30px Comfortaa";
+      ctx.font=`${this.size}px Quicksand`;
       ctx.fillText(this.msg,this.pos.x - camera.pos.x,this.pos.y - camera.pos.y);
     }
   }
 
   // - Game Info -
-  const colorArray = ['#CD5251','#F1AD69','#40748A','#111','#F5F5F5']; // subdued ryb + black + white
-  // const colorArray = ['#dd6764','#81cb72','#5b94c4','#111','#F5F5F5']; // rgb + black + white
-  // const colorArray = ['#dd6764','#e7c24c','#009e9a','#111','#F5F5F5']; // rgb + black + white
-
+  const colorArray = ['#CD5251','#F1AD69','#40748A','#111','#F5F5F5'];
   let currentColor = 0;
   let currentStage = 0;
   let objArray = [];
@@ -264,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if(this.pos.x > stages[currentStage].width - cnv.width) { this.pos.x = stages[currentStage].width - cnv.width; }
       if(this.pos.y > stages[currentStage].height - cnv.height) { this.pos.y = stages[currentStage].height - cnv.height; }
     }
-};
+  };
 
   // - Player Input -
   function checkInput() {
@@ -336,10 +334,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function frameFunction() {
     coverFrame();
 
-    ctx.fillStyle = "rgba(255,255,255,0.7)";
-    ctx.font="48px Comfortaa";
-    ctx.fillText(stages[currentStage].title,40,80);
-
     // Draw objects that are the currentColor
     objArray.filter(obj => obj.color === currentColor).forEach(obj => obj.draw());
 
@@ -354,8 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Camera movement
     camera.updatePosition();
 
-    // Drawing
-    noteArray.forEach(note => note.draw());
+    // Draw player
     player.draw();
 
     // Draw objects that are not the currentColor
@@ -363,6 +356,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Draw Player Outline
     player.drawOutline();
+
+    // Draw notes
+    noteArray.forEach(note => note.draw());
+
+    // Stage Title
+    ctx.fillStyle = "rgba(255,255,255,0.7)";
+    ctx.font="48px Quicksand";
+    ctx.fillText(stages[currentStage].title,40,80);
 
     // Check for input from the user (e.g. pause, color switch, etc.)
     checkInput();
