@@ -163,8 +163,10 @@ document.addEventListener('DOMContentLoaded', () => {
     draw() {
       ctx.fillStyle = 'rgba(0,0,0,0.15)';
       ctx.fillRect(this.pos.x - camera.pos.x + 10,this.pos.y - camera.pos.y + 10,this.width,this.height);
-      ctx.fillStyle = 'rgba(255,255,255,1)';
+      ctx.fillStyle = 'rgba(245,245,245,1)';
       ctx.fillRect(this.pos.x - camera.pos.x, this.pos.y - camera.pos.y, this.width, this.height);
+    }
+    drawOutline() {
       ctx.strokeStyle = 'rgba(0,0,0,0.5)';
       ctx.lineWidth = 2;
       ctx.strokeRect(this.pos.x - camera.pos.x, this.pos.y - camera.pos.y, this.width, this.height);
@@ -205,11 +207,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // - Note Class -
+  class Note {
+    constructor(props) {
+      this.pos = props.pos || { x: 0, y: 0 };
+      this.msg = props.msg || '';
+    }
+
+    draw() {
+      ctx.fillStyle = "rgba(255,255,255,0.7)";
+      ctx.font="30px Comfortaa";
+      ctx.fillText(this.msg,this.pos.x - camera.pos.x,this.pos.y - camera.pos.y);
+    }
+  }
+
   // - Game Info -
-  const colorArray = ['#E91E63','#E9C65F','#00BCD4','#000F23','#FFFFFF']; // ryb + black + white
+  const colorArray = ['#CD5251','#F1AD69','#40748A','#111','#F5F5F5']; // subdued ryb + black + white
+  // const colorArray = ['#dd6764','#81cb72','#5b94c4','#111','#F5F5F5']; // rgb + black + white
+  // const colorArray = ['#dd6764','#e7c24c','#009e9a','#111','#F5F5F5']; // rgb + black + white
+
   let currentColor = 0;
   let currentStage = 0;
   let objArray = [];
+  let noteArray = [];
 
   // - Camera -
   const camera = {
@@ -218,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
     vyMax: 40,
     // Screen padding for camera movement
     xPad: 650,
-    yPad: 500,
+    yPad: 350,
     updatePosition: function() {
       // Moving Right
       if((player.pos.x - this.pos.x) > (cnv.width - this.xPad)) {
@@ -234,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.pos.y -= Math.floor(((this.yPad-(player.pos.y - this.pos.y))/this.yPad)*this.vyMax);
       }
       // Moving Down
-      if((player.pos.y - this.pos.y) > (cnv.width - this.yPad)) {
+      if((player.pos.y - this.pos.y) > (cnv.height - this.yPad)) {
         this.pos.y += Math.floor((((player.pos.y - this.pos.y) - (cnv.height - this.yPad))/this.yPad)*this.vyMax);
       }
 
@@ -306,17 +326,18 @@ document.addEventListener('DOMContentLoaded', () => {
     player.pos = dup(stages[currentStage].startingPosition);
     player.vx = 0;
     player.vy = 0;
-    camera.pos = { x: 0, y: 0 };
+    camera.pos = dup(stages[currentStage].cameraPosition);
 
     currentColor = stages[currentStage].startingColor;
     objArray = stages[currentStage].objects.map(props => new Object(props));
+    noteArray = stages[currentStage].notes.map(props => new Note(props));
   };
 
   function frameFunction() {
     coverFrame();
 
-    ctx.fillStyle = "rgba(0,0,0,0.5)";
-    ctx.font="54px Comfortaa";
+    ctx.fillStyle = "rgba(255,255,255,0.7)";
+    ctx.font="48px Comfortaa";
     ctx.fillText(stages[currentStage].title,40,80);
 
     // Draw objects that are the currentColor
@@ -334,10 +355,14 @@ document.addEventListener('DOMContentLoaded', () => {
     camera.updatePosition();
 
     // Drawing
+    noteArray.forEach(note => note.draw());
     player.draw();
 
     // Draw objects that are not the currentColor
     shownObjects.forEach(obj => obj.draw());
+
+    // Draw Player Outline
+    player.drawOutline();
 
     // Check for input from the user (e.g. pause, color switch, etc.)
     checkInput();
