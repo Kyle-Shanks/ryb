@@ -12,7 +12,9 @@ ryb is a puzzle platformer where you try to traverse levels of increasing diffic
 
 The color palette was choosen to closely resemble the Haiki, the game that inspired this project. The overall look was then designed to give a very minimalist and friendly appearance with the subtle shadowing and use of only simple geometric shapes.
 
-The physics were based on the physics of platformers such as Super Mario Bros. and Super Meat Boy. Things like the acceleration of the character, wall jumping, and the camera movements were designed to give a very fluid and natural feel to the gameplay.
+The physics are based on the physics of platformers such as Super Mario Bros. and Super Meat Boy. Things like the acceleration of the character, wall jumping, and the camera movements were designed to give a very fluid and natural feel to the gameplay.
+
+The music was written also add to the very light and minimal feel of the game. The simplistic drum patterns and high, plucky synth sounds add to the friendly and relaxing vibe of the game.
 
 ## Future Plans
 
