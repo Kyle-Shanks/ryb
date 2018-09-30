@@ -3,8 +3,8 @@
 
 const stages = [
   {
-    title: 'Stage 0 - Hello World',
-    height: 1000, width: 3000,
+    title: 'Hello World',
+    height: 2000, width: 3000,
     startingPosition: { x: 350, y: 500 },
     cameraPosition: { x: 0, y: 0 },
     startingColor: 0,
@@ -24,6 +24,10 @@ const stages = [
       {
         pos: { x: 2650, y: 420 },
         msg: 'to the next stage'
+      },
+      {
+        pos: { x: 350, y: 1420 },
+        msg: 'Press Q 10 times'
       },
     ],
     objects: [
@@ -62,12 +66,11 @@ const stages = [
         height: 70, width: 70,
         color: 4,
         type: 'port',
-        stageNum: 1,
       },
     ],
   },
   {
-    title: 'Stage 1 - Double Jumping',
+    title: 'Double Jumping',
     height: 1400, width: 1400,
     startingPosition: { x: 550, y: 1000 },
     cameraPosition: { x: 0, y: 600 },
@@ -112,12 +115,11 @@ const stages = [
         height: 70, width: 70,
         color: 4,
         type: 'port',
-        stageNum: 2,
       },
     ],
   },
   {
-    title: 'Stage 2 - The Leap',
+    title: 'The Leap',
     height: 1000, width: 1400,
     startingPosition: { x: 350, y: 50 },
     cameraPosition: { x: 0, y: 0 },
@@ -146,12 +148,11 @@ const stages = [
         height: 70, width: 70,
         color: 4,
         type: 'port',
-        stageNum: 3,
       },
     ],
   },
   {
-    title: 'Stage 3 - Wall Jumping',
+    title: 'Wall Jumping',
     height: 2000, width: 1400,
     startingPosition: { x: 550, y: 1500 },
     cameraPosition: { x: 0, y: 1000 },
@@ -192,12 +193,11 @@ const stages = [
         height: 70, width: 70,
         color: 4,
         type: 'port',
-        stageNum: 4,
       },
     ],
   },
   {
-    title: 'Stage 4 - RYB',
+    title: 'RYB',
     height: 1000, width: 2000,
     startingPosition: { x: 350, y: 500 },
     cameraPosition: { x: 0, y: 0 },
@@ -267,12 +267,11 @@ const stages = [
         height: 70, width: 70,
         color: 4,
         type: 'port',
-        stageNum: 5,
       },
     ],
   },
   {
-    title: 'Stage 5 - The Great Escape',
+    title: 'The Great Escape',
     height: 3000, width: 1400,
     startingPosition: { x: 685, y: 300 },
     cameraPosition: { x: 0, y: 0 },
@@ -379,12 +378,11 @@ const stages = [
         height: 70, width: 70,
         color: 4,
         type: 'port',
-        stageNum: 6,
       },
     ],
   },
   {
-    title: 'Stage 6 - Big Blocks',
+    title: 'Big Blocks',
     height: 1000, width: 3000,
     startingPosition: { x: 350, y: 500 },
     cameraPosition: { x: 0, y: 0 },
@@ -395,12 +393,6 @@ const stages = [
         pos: { x: 800, y: 000 },
         height: 700, width: 300,
         color: 2,
-        type: 'solid'
-      },
-      {
-        pos: { x: 1600, y: 400 },
-        height: 300, width: 300,
-        color: 3,
         type: 'solid'
       },
       {
@@ -416,21 +408,27 @@ const stages = [
         type: 'solid'
       },
       {
+        pos: { x: 1600, y: 400 },
+        height: 300, width: 300,
+        color: 3,
+        type: 'solid'
+      },
+      {
         pos: { x: 1900, y: 500 },
         height: 200, width: 300,
         color: 1,
         type: 'solid'
       },
       {
-        pos: { x: 2200, y: 600 },
-        height: 100, width: 300,
-        color: 3,
-        type: 'solid'
-      },
-      {
         pos: { x: 2200, y: 0 },
         height: 600, width: 300,
         color: 0,
+        type: 'solid'
+      },
+      {
+        pos: { x: 2200, y: 600 },
+        height: 100, width: 300,
+        color: 3,
         type: 'solid'
       },
       {
@@ -450,12 +448,93 @@ const stages = [
         height: 70, width: 70,
         color: 4,
         type: 'port',
-        stageNum: 7,
       },
     ],
   },
   {
-    title: 'Stage 7 - Multitasking',
+    title: 'Columns',
+    height: 1000, width: 3000,
+    startingPosition: { x: 350, y: 500 },
+    cameraPosition: { x: 0, y: 0 },
+    startingColor: 2,
+    notes: [],
+    objects: [
+      {
+        pos: { x: 200, y: 700 },
+        height: 50, width: 400,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 850, y: -100 },
+        height: 600, width: 150,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 850, y: 500 },
+        height: 200, width: 150,
+        color: 0,
+        type: 'solid'
+      },
+      {
+        pos: { x: 850, y: 700 },
+        height: 300, width: 150,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 1400, y: -100 },
+        height: 200, width: 150,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 1400, y: 100 },
+        height: 200, width: 150,
+        color: 2,
+        type: 'solid'
+      },
+      {
+        pos: { x: 1400, y: 300 },
+        height: 700, width: 150,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 1950, y: -100 },
+        height: 800, width: 150,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 1950, y: 700 },
+        height: 200, width: 150,
+        color: 1,
+        type: 'solid'
+      },
+      {
+        pos: { x: 1950, y: 900 },
+        height: 100, width: 150,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 2400, y: 300 },
+        height: 50, width: 400,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 2565, y: 165 },
+        height: 70, width: 70,
+        color: 4,
+        type: 'port',
+      },
+    ]
+  },
+  {
+    title: 'Multitasking',
     height: 2000, width: 1400,
     startingPosition: { x: 685, y: 1500 },
     cameraPosition: { x: 0, y: 1000 },
@@ -508,12 +587,11 @@ const stages = [
         height: 70, width: 70,
         color: 4,
         type: 'port',
-        stageNum: 8,
       },
     ],
   },
   {
-    title: 'Stage 8 - IDK',
+    title: 'IDK',
     height: 1000, width: 1400,
     startingPosition: { x: 685, y: 500 },
     cameraPosition: { x: 0, y: 0 },

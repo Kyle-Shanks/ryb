@@ -2,6 +2,9 @@
 // ryb
 
 document.addEventListener('DOMContentLoaded', () => {
+  // - Audio -
+  const audio = document.getElementById('audio');
+  let audioActive = false;
   // - Canvas Context -
   const cnv = document.getElementById('cnv');
   const ctx = cnv.getContext('2d');
@@ -27,6 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('keydown', e => {
     e.preventDefault();
+    if (!audioActive) {
+      audioActive = true;
+      audio.volume = 0.5;
+      audio.play();
+    }
     const key = e.keyCode;
     switch(key) {
       case 87: input.W = true; break;     // W
@@ -43,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 69: input.E = true; break;     // E
       case 82: input.R = true; break;     // R
       case 70: input.F = true; break;     // F
+      case 77: input.M = true; break;     // M
       default: return false;
     }
   });
@@ -63,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case 69: input.E = false; break;     // E
       case 82: input.R = false; break;     // R
       case 70: input.F = false; break;     // F
+      case 77: input.M = false; break;      // M
       default: return false;
     }
   });
@@ -131,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if(obj.color !== currentColor && AABB(this, obj)) {
         switch(obj.type) {
           case 'solid': this.collisionHandler(obj); break;
-          case 'port': currentStage = obj.stageNum; reset(); break;
+          case 'port': obj.stageNum ? currentStage = obj.stageNum : currentStage++; reset(); break;
         }
       }
     }
@@ -161,13 +171,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     draw() {
+      if (retro) return;
       ctx.fillStyle = 'rgba(0,0,0,0.15)';
       ctx.fillRect(this.pos.x - camera.pos.x + 10,this.pos.y - camera.pos.y + 10,this.width,this.height);
       ctx.fillStyle = 'rgba(245,245,245,1)';
       ctx.fillRect(this.pos.x - camera.pos.x, this.pos.y - camera.pos.y, this.width, this.height);
     }
     drawOutline() {
-      ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+      ctx.strokeStyle = retro ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.5)';
       ctx.lineWidth = 2;
       ctx.strokeRect(this.pos.x - camera.pos.x, this.pos.y - camera.pos.y, this.width, this.height);
     }
@@ -186,7 +197,26 @@ document.addEventListener('DOMContentLoaded', () => {
       this.stageNum = props.stageNum;
     }
 
-    draw() {
+    draw(r) {
+      if (retro) {
+        if (this.type === 'port') {
+          ctx.strokeStyle = 'rgba(255,255,255,1)';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(this.pos.x - camera.pos.x - 20 + r, this.pos.y - camera.pos.y - 20 + r, this.width + 40, this.height + 40);
+        }
+
+        if (this.color === 3) {
+          ctx.strokeStyle = 'rgba(150,150,150,1)';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(this.pos.x - camera.pos.x + (r), this.pos.y - camera.pos.y + (r), this.width, this.height);
+        } else if (this.color !== currentColor) {
+          ctx.strokeStyle = colorArray[this.color];
+          ctx.lineWidth = 4;
+          ctx.strokeRect(this.pos.x - camera.pos.x + (r), this.pos.y - camera.pos.y + (r), this.width, this.height);
+        }
+        return;
+      }
+
       if (this.color !== currentColor) {
         // Shadow
         ctx.fillStyle = 'rgba(0,0,0,0.15)';
@@ -228,6 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentStage = 0;
   let objArray = [];
   let noteArray = [];
+  let qCount = 0;
+  let retro = false;
 
   // - Camera -
   const camera = {
@@ -311,7 +343,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // Reset
     if (input.R) {
       input.R = false;
-      reset();
+      if (retro) {
+        qCount = 0;
+        retro = false;
+        const time = audio.currentTime;
+        audio.src = "assets/audio/ryb.wav";
+        audio.play();
+        audio.currentTime = time;
+      } else {
+        reset();
+      }
+    }
+
+    // Retro
+    if (input.Q) {
+      input.Q = false;
+      if (!retro) {
+        qCount++;
+        if(qCount >= 10) {
+          retro = true;
+          const time = Number(audio.currentTime);
+          audio.src = "assets/audio/ryb_crush.wav";
+          audio.play();
+          audio.currentTime = time;
+        }
+      }
+    }
+
+    // Mute
+    if (input.M) {
+      input.M = false;
+      audio.paused ? audio.play() : audio.pause();
     }
   }
 
@@ -334,8 +396,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function frameFunction() {
     coverFrame();
 
+    const off = (Math.floor(Math.random() * 20));
+    const r = (Math.floor(Math.random() * ((off>=19)?14:3)) - ((off>=19)?4:2));
+
     // Draw objects that are the currentColor
-    objArray.filter(obj => obj.color === currentColor).forEach(obj => obj.draw());
+    objArray.filter(obj => obj.color === currentColor).forEach(obj => obj.draw(r));
 
     // Player stuff
     player.updateMovement();
@@ -352,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
     player.draw();
 
     // Draw objects that are not the currentColor
-    shownObjects.forEach(obj => obj.draw());
+    shownObjects.forEach(obj => obj.draw(r));
 
     // Draw Player Outline
     player.drawOutline();
@@ -363,7 +428,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Stage Title
     ctx.fillStyle = "rgba(255,255,255,0.7)";
     ctx.font="48px Quicksand";
-    ctx.fillText(stages[currentStage].title,40,80);
+    ctx.fillText(`Stage ${currentStage} - ${stages[currentStage].title}`,60,80);
+
+    if (retro) {
+      for (let i = 0; i < 3; i++) {
+        ctx.strokeStyle = (currentColor !== i) ? colorArray[i] : 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(1120 + (80*i), 40, 50, 50);
+      }
+    }
 
     // Check for input from the user (e.g. pause, color switch, etc.)
     checkInput();
@@ -372,8 +445,8 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(frameFunction);
   };
 
-  function coverFrame() {
-    ctx.fillStyle = colorArray[currentColor];
+  function coverFrame(color) {
+    ctx.fillStyle = retro ? 'rgba(0,0,0,0.7)' : colorArray[currentColor];
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
 
