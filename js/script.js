@@ -140,8 +140,13 @@ document.addEventListener('DOMContentLoaded', () => {
     collisionCheck(obj) {
       if(obj.color !== currentColor && AABB(this, obj)) {
         switch(obj.type) {
-          case 'solid': this.collisionHandler(obj); break;
-          case 'port': obj.stageNum ? currentStage = obj.stageNum : currentStage++; reset(); break;
+          case 'solid':
+            this.collisionHandler(obj);
+            break;
+          case 'port':
+            obj.stageNum !== undefined ? (currentStage = obj.stageNum) : currentStage++;
+            reset();
+            break;
         }
       }
     }
@@ -396,8 +401,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function frameFunction() {
     coverFrame();
 
-    const off = (Math.floor(Math.random() * 20));
-    const r = (Math.floor(Math.random() * ((off>=19)?14:3)) - ((off>=19)?4:2));
+    const off = (Math.floor(Math.random() * 22));
+    const r = (Math.floor(Math.random() * ((off>=21)?16:3)) - ((off>=19)?5:2));
 
     // Draw objects that are the currentColor
     objArray.filter(obj => obj.color === currentColor).forEach(obj => obj.draw(r));
@@ -445,8 +450,8 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(frameFunction);
   };
 
-  function coverFrame(color) {
-    ctx.fillStyle = retro ? 'rgba(0,0,0,0.7)' : colorArray[currentColor];
+  function coverFrame() {
+    ctx.fillStyle = retro ? 'rgba(0,0,0,0.5)' : colorArray[currentColor];
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
 

@@ -204,17 +204,17 @@ const stages = [
     startingColor: 0,
     notes: [
       {
-        pos: { x: 625, y: 670 },
+        pos: { x: 625, y: 570 },
         msg: '←',
         size: 54
       },
       {
-        pos: { x: 787, y: 672 },
+        pos: { x: 787, y: 572 },
         msg: '↕',
         size: 54
       },
       {
-        pos: { x: 925, y: 670 },
+        pos: { x: 925, y: 570 },
         msg: '→',
         size: 54
       },
@@ -534,11 +534,93 @@ const stages = [
     ]
   },
   {
+    title: 'Ascension',
+    height: 3000, width: 1400,
+    startingPosition: { x: 450, y: 2500 },
+    cameraPosition: { x: 0, y: 2000 },
+    startingColor: 0,
+    notes: [],
+    objects: [
+      {
+        pos: { x: 300, y: 2700 },
+        height: 50, width: 400,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 900, y: 2450 },
+        height: 50, width: 300,
+        color: 0,
+        type: 'solid'
+      },
+      {
+        pos: { x: 200, y: 2250 },
+        height: 50, width: 300,
+        color: 2,
+        type: 'solid'
+      },
+      {
+        pos: { x: 500, y: 1950 },
+        height: 50, width: 300,
+        color: 1,
+        type: 'solid'
+      },
+      {
+        pos: { x: 900, y: 1750 },
+        height: 50, width: 300,
+        color: 2,
+        type: 'solid'
+      },
+      {
+        pos: { x: 200, y: 1550 },
+        height: 50, width: 200,
+        color: 0,
+        type: 'solid'
+      },
+      {
+        pos: { x: 800, y: 1350 },
+        height: 50, width: 200,
+        color: 1,
+        type: 'solid'
+      },
+      {
+        pos: { x: 500, y: 1050 },
+        height: 50, width: 200,
+        color: 0,
+        type: 'solid'
+      },
+      {
+        pos: { x: 900, y: 850 },
+        height: 50, width: 100,
+        color: 2,
+        type: 'solid'
+      },
+      {
+        pos: { x: 500, y: 650 },
+        height: 50, width: 100,
+        color: 1,
+        type: 'solid'
+      },
+      {
+        pos: { x: 900, y: 350 },
+        height: 50, width: 400,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 1065, y: 200 },
+        height: 70, width: 70,
+        color: 4,
+        type: 'port'
+      },
+    ]
+  },
+  {
     title: 'Multitasking',
     height: 2000, width: 1400,
     startingPosition: { x: 685, y: 1500 },
     cameraPosition: { x: 0, y: 1000 },
-    startingColor: 0,
+    startingColor: 1,
     notes: [
       {
         pos: { x: 300, y: 1650 },
@@ -591,18 +673,38 @@ const stages = [
     ],
   },
   {
-    title: 'IDK',
+    title: 'Fin',
     height: 1000, width: 1400,
     startingPosition: { x: 685, y: 500 },
     cameraPosition: { x: 0, y: 0 },
     startingColor: 2,
-    notes: [],
+    notes: [
+      {
+        pos: { x: 590, y: 550 },
+        msg: 'That\'s all for now.',
+      },
+      {
+        pos: { x: 545, y: 590 },
+        msg: 'Thank you for playing!',
+      },
+      {
+        pos: { x: 1000, y: 450 },
+        msg: 'Portal back to stage 0',
+      },
+    ],
     objects: [
       {
         pos: { x: 500, y: 700 },
         height: 50, width: 400,
         color: 3,
         type: 'solid'
+      },
+      {
+        pos: { x: 1120, y: 520 },
+        height: 70, width: 70,
+        color: 4,
+        type: 'port',
+        stageNum: 0,
       },
     ],
   },
