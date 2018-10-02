@@ -673,6 +673,207 @@ const stages = [
     ],
   },
   {
+    title: 'Danger',
+    height: 1000, width: 1400,
+    startingPosition: { x: 285, y: 500 },
+    cameraPosition: { x: 0, y: 0 },
+    startingColor: 2,
+    notes: [
+      {
+        pos: { x: 630, y: 580 },
+        msg: 'Beware of spikes',
+      },
+    ],
+    objects: [
+      {
+        pos: { x: 200, y: 700 },
+        height: 50, width: 700,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 600, y: 650 },
+        height: 50, width: 300,
+        color: 0,
+        type: 'spikes',
+        dir: 0,
+      },
+      {
+        pos: { x: 1120, y: 520 },
+        height: 70, width: 70,
+        color: 4,
+        type: 'port',
+      },
+    ],
+  },
+  {
+    title: 'Floor Is Lava',
+    height: 1000, width: 3200,
+    startingPosition: { x: 385, y: 500 },
+    cameraPosition: { x: 0, y: 0 },
+    startingColor: 0,
+    notes: [],
+    objects: [
+      {
+        pos: { x: 700, y: 650 },
+        height: 50, width: 500,
+        color: 2,
+        type: 'spikes',
+        dir: 0,
+      },
+      {
+        pos: { x: 1200, y: 650 },
+        height: 50, width: 500,
+        color: 1,
+        type: 'spikes',
+        dir: 0,
+      },
+      {
+        pos: { x: 1700, y: 650 },
+        height: 50, width: 500,
+        color: 2,
+        type: 'spikes',
+        dir: 0,
+      },
+      {
+        pos: { x: 2200, y: 650 },
+        height: 50, width: 500,
+        color: 0,
+        type: 'spikes',
+        dir: 0,
+      },
+      {
+        pos: { x: 2700, y: 650 },
+        height: 50, width: 500,
+        color: 1,
+        type: 'spikes',
+        dir: 0,
+      },
+      {
+        pos: { x: 200, y: 700 },
+        height: 50, width: 3000,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 2950, y: 500 },
+        height: 70, width: 70,
+        color: 4,
+        type: 'port',
+      },
+    ],
+  },
+  {
+    title: 'Jaws',
+    height: 1000, width: 3000,
+    startingPosition: { x: 285, y: 500 },
+    cameraPosition: { x: 0, y: 0 },
+    startingColor: 1,
+    notes: [],
+    objects: [
+      {
+        pos: { x: 100, y: 700 },
+        height: 50, width: 400,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 600, y: 200 },
+        height: 50, width: 1600,
+        color: 3,
+        type: 'spikes',
+        dir: 2,
+      },
+      {
+        pos: { x: 600, y: 700 },
+        height: 50, width: 1600,
+        color: 3,
+        type: 'spikes',
+        dir: 0,
+      },
+      {
+        pos: { x: 600, y: 0 },
+        height: 200, width: 1600,
+        color: 3,
+        type: 'solid',
+        dir: 2,
+      },
+      {
+        pos: { x: 600, y: 750 },
+        height: 250, width: 1600,
+        color: 3,
+        type: 'solid',
+        dir: 2,
+      },
+      {
+        pos: { x: 700, y: 300 },
+        height: 350, width: 50,
+        color: 0,
+        type: 'solid'
+      },
+      {
+        pos: { x: 900, y: 300 },
+        height: 350, width: 50,
+        color: 2,
+        type: 'solid'
+      },
+      {
+        pos: { x: 1100, y: 300 },
+        height: 350, width: 50,
+        color: 1,
+        type: 'solid'
+      },
+      {
+        pos: { x: 1300, y: 300 },
+        height: 350, width: 50,
+        color: 2,
+        type: 'solid'
+      },
+      {
+        pos: { x: 1500, y: 300 },
+        height: 350, width: 50,
+        color: 0,
+        type: 'solid'
+      },
+      {
+        pos: { x: 1700, y: 300 },
+        height: 350, width: 50,
+        color: 1,
+        type: 'solid'
+      },
+      {
+        pos: { x: 1900, y: 300 },
+        height: 350, width: 50,
+        color: 0,
+        type: 'solid'
+      },
+      {
+        pos: { x: 2100, y: 300 },
+        height: 350, width: 50,
+        color: 2,
+        type: 'solid'
+      },
+      {
+        pos: { x: 2300, y: 300 },
+        height: 350, width: 50,
+        color: 1,
+        type: 'solid'
+      },
+      {
+        pos: { x: 2550, y: 600 },
+        height: 50, width: 400,
+        color: 3,
+        type: 'solid'
+      },
+      {
+        pos: { x: 2715, y: 465 },
+        height: 70, width: 70,
+        color: 4,
+        type: 'port',
+      },
+    ],
+  },
+  {
     title: 'Fin',
     height: 1000, width: 1400,
     startingPosition: { x: 685, y: 500 },

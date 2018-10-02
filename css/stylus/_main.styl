@@ -1,14 +1,25 @@
 // out: ../main.css
 body
   background-color #CCC
+  height 100vh
+  font-family 'Quicksand', Helvetica, sans-serif
+  font-size: 20px
 
-.canvas-container
+a
+  margin-left 10px
+
+.abs-center
   position absolute
   top 50%
   left 50%
   transform translate(-50%,-50%)
+
+.canvas-container
+  display block
+  position relative
   height 600px
   width 840px
+  margin auto
   transition 0.3s cubic-bezier(0.6,0,0.2,1)
 
 #cnv
@@ -17,10 +28,19 @@ body
   border 2px solid #222
   box-shadow 10px 10px 0 0 rgba(0,0,0,0.1)
 
-@media screen and (max-height: 800px)
-  .canvas-container
-    transform translate(-50%,-50%) scale(0.85)
+.info-container
+  display flex
+  justify-content space-between
+  padding 20px
+  width 800px
+  text-align right
+  transition 0.3s cubic-bezier(0.6,0,0.2,1)
+  & > *
+    margin 1em
 
 @media screen and (max-width: 900px)
   .canvas-container
-    transform translate(-50%,-50%) scale(0.75)
+    height 453px
+    width 633px
+  .info-container
+    width 633px
