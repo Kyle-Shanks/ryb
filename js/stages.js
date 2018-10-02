@@ -204,25 +204,49 @@ const stages = [
     startingColor: 0,
     notes: [
       {
-        pos: { x: 625, y: 570 },
+        pos: { x: 632, y: 564 },
         msg: '←',
-        size: 54,
+        size: 40,
       },
       {
-        pos: { x: 787, y: 508 },
+        pos: { x: 617, y: 575 },
+        msg: '⬚',
+        size: 70,
+      },
+      {
+        pos: { x: 787, y: 492 },
         msg: '↑',
-        size: 54,
+        size: 40,
       },
       {
-        pos: { x: 787, y: 568 },
+        pos: { x: 766, y: 503 },
+        msg: '⬚',
+        size: 70,
+      },
+      {
+        pos: { x: 787, y: 562 },
         msg: '↓',
-        size: 54,
+        size: 40,
       },
       {
-        pos: { x: 925, y: 570 },
-        msg: '→',
-        size: 54,
+        pos: { x: 766, y: 575 },
+        msg: '⬚',
+        size: 70,
       },
+      {
+        pos: { x: 932, y: 564 },
+        msg: '→',
+        size: 40,
+      },
+      {
+        pos: { x: 917, y: 575 },
+        msg: '⬚',
+        size: 70,
+      },
+      {
+        pos: {x: 655, y: 400},
+        msg: 'Press to change color',
+      }
     ],
     objects: [
       {
