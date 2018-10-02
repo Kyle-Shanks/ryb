@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // - Game Info -
   const colorArray = ['#CD5251','#F1AD69','#40748A','#111','#F5F5F5'];
   let currentColor = 0;
-  let currentStage = 12;
+  let currentStage = 0;
   let objArray = [];
   let noteArray = [];
   let qCount = 0;

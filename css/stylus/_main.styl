@@ -5,9 +5,6 @@ body
   font-family 'Quicksand', Helvetica, sans-serif
   font-size: 20px
 
-a
-  margin-left 10px
-
 .abs-center
   position absolute
   top 50%
@@ -33,10 +30,14 @@ a
   justify-content space-between
   padding 20px
   width 800px
-  text-align right
   transition 0.3s cubic-bezier(0.6,0,0.2,1)
   & > *
     margin 1em
+  & > p
+    text-align right
+
+.dev-info *
+  margin-right 10px
 
 @media screen and (max-width: 900px)
   .canvas-container
