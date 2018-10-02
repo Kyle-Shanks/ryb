@@ -206,17 +206,22 @@ const stages = [
       {
         pos: { x: 625, y: 570 },
         msg: '←',
-        size: 54
+        size: 54,
       },
       {
-        pos: { x: 787, y: 572 },
-        msg: '↕',
-        size: 54
+        pos: { x: 787, y: 508 },
+        msg: '↑',
+        size: 54,
+      },
+      {
+        pos: { x: 787, y: 568 },
+        msg: '↓',
+        size: 54,
       },
       {
         pos: { x: 925, y: 570 },
         msg: '→',
-        size: 54
+        size: 54,
       },
     ],
     objects: [
