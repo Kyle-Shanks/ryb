@@ -49,3 +49,12 @@ body {
     width: 633px;
   }
 }
+@media screen and (max-height: 800px) {
+  .canvas-container {
+    height: 453px;
+    width: 633px;
+  }
+  .info-container {
+    width: 633px;
+  }
+}

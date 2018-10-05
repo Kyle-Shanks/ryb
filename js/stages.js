@@ -902,6 +902,15 @@ const stages = [
       },
     ],
   },
+  // {
+  //   title: '',
+  //   height: 1000, width: 1400,
+  //   startingPosition: { x: 285, y: 500 },
+  //   cameraPosition: { x: 0, y: 0 },
+  //   startingColor: 1,
+  //   notes: [],
+  //   objects: []
+  // },
   {
     title: 'Fin',
     height: 1000, width: 1400,
