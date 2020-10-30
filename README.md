@@ -2,7 +2,7 @@
 
 This is ryb. A clone of a pretty neat indie game called Haiki. ryb was made using HTML5 canvas and good ol' JavaScript.
 
-[Play ryb Here!](http://ryb.kyle-shanks.com/)
+[Play ryb Here!](https://ryb-game.netlify.app/)
 
 ![ryb Screenshot](assets/images/ryb.png)
 

@@ -1,3 +1,5 @@
+@import url(fonts.css);
+
 body {
   background-color: #ccc;
   height: 100vh;
@@ -31,30 +33,15 @@ body {
   width: 800px;
   transition: 0.3s cubic-bezier(0.6, 0, 0.2, 1);
 }
-.info-container > * {
-  margin: 1em;
-}
-.info-container > p {
-  text-align: right;
-}
-.dev-info * {
-  margin-right: 10px;
-}
+.info-container > * { margin: 1em; }
+.info-container > p { text-align: right; }
+.dev-info * { margin-right: 10px; }
+
 @media screen and (max-width: 900px) {
-  .canvas-container {
-    height: 453px;
-    width: 633px;
-  }
-  .info-container {
-    width: 633px;
-  }
+  .canvas-container { height: 453px; width: 633px; }
+  .info-container { width: 633px; }
 }
 @media screen and (max-height: 800px) {
-  .canvas-container {
-    height: 453px;
-    width: 633px;
-  }
-  .info-container {
-    width: 633px;
-  }
+  .canvas-container { height: 453px; width: 633px; }
+  .info-container { width: 633px; }
 }

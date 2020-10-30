@@ -3,9 +3,11 @@ const camera = {
   pos: { x: 0, y: 0 },
   vxMax: 25,
   vyMax: 40,
+
   // Screen padding for camera movement
   xPad: 650,
   yPad: 350,
+
   updatePosition: function() {
     // Moving Right
     if((player.pos.x - this.pos.x) > (cnv.width - this.xPad)) {
